@@ -130,11 +130,12 @@ export default function Footer() {
               LinkedIn
             </a>
             <a
-              download="Kshitij_Datta.pdf"
               href={CV}
-              style={{ color: "white", textDecoration: "none" }}
+              target="_blank"
+              rel="noreferrer"
+              className="social-btn"
             >
-              Download CV
+              Resume <i className="uil uil-external-link-alt"></i>
             </a>
           </div>
         </div>
