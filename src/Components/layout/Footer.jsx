@@ -133,9 +133,13 @@ export default function Footer() {
               href={CV}
               target="_blank"
               rel="noreferrer"
-              className="social-btn"
+              style={{ color: "white", textDecoration: "none" }}
             >
-              Resume <i className="uil uil-external-link-alt"></i>
+              Resume{" "}
+              <i
+                className="uil uil-external-link-alt"
+                style={{ color: "white" }}
+              ></i>
             </a>
           </div>
         </div>
