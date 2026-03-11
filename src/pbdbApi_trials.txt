@@ -1,0 +1,260 @@
+// tools: fetchDinosaurs - robust, clean implementation
+
+/**
+ * Fetch a paginated list of dinosaur genera from PBDB.
+ 
+export async function fetchDinosaurs(offset = 0, limit = 50) {
+  // Basic input normalization
+  offset = Math.max(0, Number(offset) || 0);
+  limit = Math.max(1, Math.min(200, Number(limit) || 50));
+
+  try {
+    // Use the public PBDB API. Adjust base_url if you need a different endpoint.
+    const res = await fetch(
+      "https://paleobiodb.org/data1.2/taxa/list.json?base_name=Dinosauria&rel=all_children&rank=genus&status=valid&limit=200",
+    );
+
+    if (!res.ok) {
+      console.error("PBDB request failed with status", res.status);
+      return [];
+    }
+
+    const data = await res.json();
+
+    // PBDB structure: data.records is the array of results
+    const records = Array.isArray(data?.records) ? data.records : [];
+
+    // Remove synonym entries safely
+    const filtered = records.filter((r) => {
+      const name = r?.nam ?? "";
+      return !name.toLowerCase().includes("synonym");
+    });
+
+    // Local pagination
+    const page = filtered.slice(offset, offset + limit);
+
+    // Normalize output
+    return page.map((record, index) => ({
+      id: record?.tid ?? offset + index,
+      name: record?.nam ?? "Unknown",
+      rank: record?.rnk ?? "genus",
+      period: record?.tdf ?? "Mesozoic",
+    }));
+  } catch (err) {
+    console.error("Fetch Dinosaurs failed:", err);
+    return [];
+  }
+}
+*/
+/*
+
+// In-memory cache for prefetched pages
+const dinosaurlCache = new Map(); // key: offset, value: Array<{id,name,rank,period}>
+
+// Existing function (unchanged) but with small tweaks to support cache
+export async function fetchDinosaurs(offset = 0, limit = 50) {
+  // Basic input normalization
+  offset = Math.max(0, Number(offset) || 0);
+  limit = Math.max(1, Math.min(200, Number(limit) || 50));
+
+  // If we already have this page cached, return it immediately
+  if (dinosaurlCache.has(offset)) {
+    return dinosaurlCache.get(offset);
+  }
+
+  // We still fetch fresh data as the source of truth
+  const MAX_TOTAL = 10000; // optional cap
+  const BATCH_SIZE = 200;
+  const endIndex = offset + limit;
+  const targetTotal = Math.min(MAX_TOTAL, endIndex);
+
+  try {
+    let allRecords = [];
+    let fetched = 0;
+    let batchOffset = 0;
+
+    while (fetched < targetTotal) {
+      const res = await fetch(
+        `https://paleobiodb.org/data1.2/taxa/list.json?base_name=Dinosauria&rel=all_children&rank=genus&status=valid&limit=${BATCH_SIZE}&offset=${batchOffset}`,
+      );
+
+      if (!res.ok) {
+        console.error("PBDB request failed with status", res.status);
+        return [];
+      }
+
+      const data = await res.json();
+      const records = Array.isArray(data?.records) ? data.records : [];
+
+      if (records.length === 0) break;
+
+      const filtered = records.filter((r) => {
+        const name = r?.nam ?? "";
+        return !name.toLowerCase().includes("synonym");
+      });
+
+      allRecords = allRecords.concat(filtered);
+      fetched += filtered.length;
+      batchOffset += BATCH_SIZE;
+    }
+
+    const page = allRecords.slice(offset, offset + limit);
+
+    const result = page.map((record, index) => ({
+      id: record?.tid ?? offset + index,
+      name: record?.nam ?? "Unknown",
+      rank: record?.rnk ?? "genus",
+      period: record?.tdf ?? "Mesozoic",
+    }));
+
+    // Cache the page for future quick access
+    dinosaurlCache.set(offset, result);
+
+    return result;
+  } catch (err) {
+    console.error("Fetch Dinosaurs failed:", err);
+    return [];
+  }
+}
+
+// Simple prefetch coordinator
+let _prefetching = false;
+const PREFETCH_BATCHES = 4; // how many subsequent pages to prefetch
+const PREFETCH_DELAY_MS = 300; // delay before starting prefetch after initial load (optional)
+
+async function prefetchNextPages(currentOffset, limit) {
+  console.log("1 data next load");
+  if (_prefetching) return;
+  _prefetching = true;
+
+  try {
+    // Prefetch the next N pages after the current page
+    const nextOffsets = [];
+    for (let i = 1; i <= PREFETCH_BATCHES; i++) {
+      nextOffsets.push(currentOffset + limit * i);
+      console.log("2 Next data load");
+    }
+
+    for (const off of nextOffsets) {
+      // Only prefetch if not already cached
+      if (!dinosaurlCache.has(off)) {
+        // Grab the same page size as the current request
+        const data = await fetchDinosaurs(off, limit);
+
+        console.log("3 load Next data ");
+        // fetchDinosaurs caches the page already
+      }
+    }
+  } catch (e) {
+    // Silently swallow prefetch errors to avoid UI disruption
+    console.error("Dinosaurs prefetch failed", e);
+  } finally {
+    _prefetching = false;
+  }
+}
+
+// Call this after you render the current list
+export function setupNearBottomPrefetch(
+  containerElement,
+  currentPageOffset,
+  currentLimit,
+) {
+  if (!containerElement) return;
+
+  const sentinel = document.createElement("div");
+  sentinel.style.height = "1px";
+  sentinel.id = "dinosaurs-prefetch-sentinel";
+  containerElement.appendChild(sentinel);
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      const entry = entries[0];
+      if (entry && entry.isIntersecting) {
+        // When near bottom, trigger prefetch of next pages
+        prefetchNextPages(currentPageOffset, currentLimit);
+      }
+    },
+    { root: containerElement, rootMargin: "200px" },
+  ); // adjust threshold as needed
+
+  observer.observe(sentinel);
+
+  // Cleanup helper (optional)
+  return () => {
+    observer.disconnect();
+    sentinel.remove();
+  };
+}
+*/
+
+/*
+/**
+ * Fetch a paginated list of dinosaur genera from PBDB.
+ * This version supports fetching up to 2000 items by batching requests.
+ * @param {number} offset - starting index
+ * @param {number} limit - number of items to return
+ * @returns {Promise<Array<{id:string|number, name:string, rank:string, period:string}>>}
+ 
+export async function fetchDinosaurs(offset = 0, limit = 50) {
+  // Basic input normalization
+  offset = Math.max(0, Number(offset) || 0);
+  limit = Math.max(1, Math.min(200, Number(limit) || 50));
+
+  // We will attempt to fetch up to 2000 items by batching in chunks of 200
+  const MAX_TOTAL = 20000; // requested total items limit
+  const BATCH_SIZE = 200; // PBDB max per request in your setup
+
+  // Determine the total range we need to retrieve to satisfy the requested slice
+  // We fetch enough items to cover the window [offset, offset + limit)
+  const endIndex = offset + limit;
+  const targetTotal = Math.min(MAX_TOTAL, endIndex); // how many items we need overall
+
+  try {
+    let allRecords = [];
+    let fetched = 0;
+    let batchOffset = 0;
+
+    // Fetch in batches of 200 until we have at least 'targetTotal' items
+    while (fetched < targetTotal) {
+      const res = await fetch(
+        `https://paleobiodb.org/data1.2/taxa/list.json?base_name=Dinosauria&rel=all_children&rank=genus&status=valid&limit=${BATCH_SIZE}&offset=${batchOffset}`,
+      );
+
+      if (!res.ok) {
+        console.error("PBDB request failed with status", res.status);
+        return [];
+      }
+
+      const data = await res.json();
+      const records = Array.isArray(data?.records) ? data.records : [];
+
+      // If no more records returned, break to avoid infinite loop
+      if (records.length === 0) break;
+
+      // Remove synonym entries safely
+      const filtered = records.filter((r) => {
+        const name = r?.nam ?? "";
+        return !name.toLowerCase().includes("synonym");
+      });
+
+      allRecords = allRecords.concat(filtered);
+      fetched += filtered.length;
+      batchOffset += BATCH_SIZE;
+    }
+
+    // Local pagination: slice based on desired offset and limit
+    const page = allRecords.slice(offset, offset + limit);
+
+    // Normalize output
+    return page.map((record, index) => ({
+      id: record?.tid ?? offset + index,
+      name: record?.nam ?? "Unknown",
+      rank: record?.rnk ?? "genus",
+      period: record?.tdf ?? "Mesozoic",
+    }));
+  } catch (err) {
+    console.error("Fetch Dinosaurs failed:", err);
+    return [];
+  }
+}
+*/
