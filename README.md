@@ -1,70 +1,41 @@
-# Getting Started with Create React App
+Dinonaur: Prehistoric EncyclopediaDinonaur is a high-performance, data-driven Single Page Application (SPA) designed to explore the Mesozoic era. Utilizing live scientific data from the Paleobiology Database (PBDB) the application provides a seamless, interactive archive of over 2,000 dinosaur genera.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+🔗 **[Visit Site](https://kshitij-datta.github.io/Dinosaurs/)**
 
-## Available Scripts
+🚀 Technical Highlights
 
-In the project directory, you can run:
+# Massive Data Handling: Managed a dataset of 2,000+ records without performance degradation using DOM Virtualization (react-virtuoso).
 
-### `npm start`
+# Dynamic Routing: Leveraged React Router to architect a multi-page feel within a single-page environment, enabling unique, shareable URLs for every specimen.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+# Client-Side Caching: Implemented a localStorage caching system to reduce redundant network requests for images, improving load times for returning visitors.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+# Interactive Mapping: Integrated React-Leaflet to plot fossil occurrence coordinates on an interactive geographic interface.
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+🛠️ Tech Stack
+Category
+Technology
+Frontend
+React.js, React Router
+Performance
+React-Virtuoso (Windowing/Virtualization)
+Styling
+Custom CSS3 (Minimalist / Earthy Theme)
+Data Sources
+Paleobiology Database (PBDB)
+Maps
+Leaflet.js / React-Leaflet
+📂 Project Structure
+src/
+├── Components/
+│ ├── detail/ # Taxonomy cards, Fossil maps
+│ ├── explorer/ # Virtualized grid, search controls
+│ ├── layout/ # Navbar, Hero, Footer
+│ └── ui/ # Modals, Buttons
+├── pages/ # Page-level components (Home, Detail)
+├── services/ # API logic and fetch utilities (pbdbApi.js)
+└── asset/ # Static assets (CV, local icons)
+⚙️ Installation & SetupClone the repository:Bashgit clone https://github.com/Kshitij-Datta/Dinosaurs.git
+Install dependencies:Bashnpm install
+Start the development server:Bashnpm start
+📝 AuthorKshitij DattaPortfolio: kshitijdatta.vercel.appLinkedIn: linkedin.com/in/kshitij-datta-sdeGitHub: @Kshitij-Datta
