@@ -28,7 +28,7 @@ export default function Footer() {
               marginBottom: "8px",
             }}
           >
-            2,000+
+            3,750+
           </div>
           <div
             style={{

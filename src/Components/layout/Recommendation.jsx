@@ -23,6 +23,7 @@ export default function Recommendations() {
       >
         <div>
           <h2
+            className="rec-header"
             style={{
               fontSize: "2.5rem",
               fontWeight: "bold",

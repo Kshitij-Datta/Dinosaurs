@@ -52,6 +52,7 @@ export default function Explorer() {
 
   useEffect(() => {
     loadMore();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /*
